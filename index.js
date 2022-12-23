@@ -136,6 +136,10 @@ const tick = async(config, binanceClient) => {
             }
         }
 
+        if (openOrders.length > 1) {
+            console.log("let's go again");
+        }
+
     }
 
     if (initialMargin == 0 && contracts == 0) {
