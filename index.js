@@ -107,7 +107,7 @@ const tick = async(config, binanceClient) => {
 
     if (initialMargin > 0 && contracts > 0 ) {
     
-        if (openOrders.length == 1) {
+        if (openOrders.length < 2) {
 
             // cancel the existing order 
             await  binanceClient.cancelAllOrders(market)
@@ -125,6 +125,7 @@ const tick = async(config, binanceClient) => {
             }
 
         }
+
 
         if (collateral < (0.55 * initialMargin)) {
             if (side == 'short') {
@@ -199,7 +200,7 @@ const run = () => {
         market: "BTCBUSD",
         allocation : 0.2,
         spread : 50,
-        tickInterval: 300000,
+        tickInterval: 100000,
         leverage: 30
     }
 
