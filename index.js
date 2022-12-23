@@ -189,6 +189,10 @@ const tick = async(config, binanceClient) => {
                 Limit buy order placed at ${currentPrice - 100}
             `);        
         }
+
+        if ((recentDirection == 'down' && candleDownCounter <= 2) || (recentDirection == 'up' && candleUpCounter <= 2)) {
+            console.log("we go again");
+        }
     }
 }
 
@@ -200,7 +204,7 @@ const run = () => {
         market: "BTCBUSD",
         allocation : 0.2,
         spread : 50,
-        tickInterval: 100000,
+        tickInterval: 150000,
         leverage: 30
     }
 
