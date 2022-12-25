@@ -94,7 +94,7 @@ const tick = async(config, binanceClient) => {
 
     let totalBUSD = busdBalance['BUSD']['total']
 
-    let baseOrderAmount = ((0.2 * totalBUSD) * leverage)/ currentPrice
+    let baseOrderAmount = ((0.05 * totalBUSD) * leverage)/ currentPrice
     let reUpdatedAmount = (initialMargin * leverage)/ currentPrice
 
     // console.log(positions);
@@ -155,20 +155,31 @@ const tick = async(config, binanceClient) => {
             
             // place first order 
 
-            await binanceClient.createMarketSellOrder(market, baseOrderAmount)
+            await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 2))
 
             // place second order 
 
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 40))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 30))
 
-            // place backup order 
+            // place backup orders
 
+            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 25))
+            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 50))
+            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 75))
             await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 100))
+            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 150))
+            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 200))
+
 
             console.log(`
                 Market sell order placed at ${currentPrice}
-                Limit buy order  placed at ${currentPrice - 40}
+                Limit buy order  placed at ${currentPrice - 30}
+                Limit sell order placed at ${currentPrice + 25}
+                Limit sell order placed at ${currentPrice + 50}
+                Limit sell order placed at ${currentPrice + 75}
                 Limit sell order placed at ${currentPrice + 100}
+                Limit sell order placed at ${currentPrice + 150}
+                Limit sell order placed at ${currentPrice + 200}
             `);
         
 
@@ -177,20 +188,30 @@ const tick = async(config, binanceClient) => {
         if (recentDirection == 'up' && candleUpCounter > 2) {
             // place first order 
 
-            await binanceClient.createMarketBuyOrder(market, baseOrderAmount)
+            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2))
 
             // place second order 
 
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 40))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 30))
 
             // place backup order 
 
+            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 25))
+            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 50))
+            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 75))
             await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 100))
+            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 150))
+            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 200))
 
             console.log(`
                 Market buy order placed at ${currentPrice}
-                Limit sell order  placed at ${currentPrice + 40}
+                Limit sell order  placed at ${currentPrice + 30}
+                Limit buy order placed at ${currentPrice - 25}
+                Limit buy order placed at ${currentPrice - 50}
+                Limit buy order placed at ${currentPrice - 75}
                 Limit buy order placed at ${currentPrice - 100}
+                Limit buy order placed at ${currentPrice - 150}
+                Limit buy order placed at ${currentPrice - 200}
             `);        
         }
 
