@@ -113,7 +113,7 @@ const tick = async(config, binanceClient) => {
 
                 openOrders.forEach(async e => {
                     if (e.side == 'buy'){
-                        await binanceClient.cancelOrder(e.id)
+                        await binanceClient.cancelOrder(e.id, market)
                     }
                 });
 
@@ -127,7 +127,7 @@ const tick = async(config, binanceClient) => {
 
                   openOrders.forEach(async e => {
                     if (e.side == 'sell'){
-                        await binanceClient.cancelOrder(e.id)
+                        await binanceClient.cancelOrder(e.id, market)
                     }
                 });
 
@@ -273,8 +273,7 @@ const run = () => {
 
    
   
-    // binanceClient.cancelOrder()
-    
+   
 
     tick(config, binanceClient)
     setInterval(tick, config.tickInterval, config, binanceClient)
