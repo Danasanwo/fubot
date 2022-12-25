@@ -90,7 +90,7 @@ const tick = async(config, binanceClient) => {
     // console.log(side);
     // console.log(busdBalance['BUSD']['total']);
 
-    // console.log(openOrders);
+    // console.log(openOrders); 
 
     let totalBUSD = busdBalance['BUSD']['total']
 
@@ -106,7 +106,39 @@ const tick = async(config, binanceClient) => {
     // if existing position 
 
     if (initialMargin > 0 && contracts > 0 ) {
-    
+        
+        if (openOrders.length < 7) {
+            if (side == 'short') {
+                // cancel current buy order 
+
+                openOrders.forEach(async e => {
+                    if (e.side == 'buy'){
+                        await binanceClient.cancelOrder(e.id)
+                    }
+                });
+
+                // place new order 
+                await binanceClient.createLimitBuyOrder(market, reUpdatedAmount, (entryPrice - 30))
+
+                console.log(`placed new limit buy order at ${(entryPrice - 30)} `);
+                }
+            if (side == 'long') {
+                  // cancel current sell order 
+
+                  openOrders.forEach(async e => {
+                    if (e.side == 'sell'){
+                        await binanceClient.cancelOrder(e.id)
+                    }
+                });
+
+                // place new order 
+                await binanceClient.createLimitSellOrder(market, reUpdatedAmount, (entryPrice + 30))
+
+                console.log(`placed new limit sell order at ${(entryPrice + 30)} `);
+                
+            }
+        }
+
         if (openOrders.length < 2) {
 
             // cancel the existing order 
@@ -241,7 +273,7 @@ const run = () => {
 
    
   
-    // binanceClient.createLimitSellOrder()
+    // binanceClient.cancelOrder()
     
 
     tick(config, binanceClient)
