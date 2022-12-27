@@ -94,7 +94,7 @@ const tick = async(config, binanceClient) => {
 
     let totalBUSD = busdBalance['BUSD']['total']
 
-    let baseOrderAmount = ((0.05 * totalBUSD) * leverage)/ currentPrice
+    let baseOrderAmount = ((0.03 * totalBUSD) * leverage)/ currentPrice
     let reUpdatedAmount = (initialMargin * leverage)/ currentPrice
 
     // console.log(positions);
@@ -187,20 +187,20 @@ const tick = async(config, binanceClient) => {
             
             // place first order 
 
-            await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 2))
+            await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 3))
 
             // place second order 
 
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 30))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 3), (currentPrice - 30))
 
             // place backup orders
 
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 25))
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 50))
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 75))
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 100))
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 150))
-            await binanceClient.createLimitSellOrder(market, baseOrderAmount, (currentPrice + 200))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 1.25), (currentPrice + 25))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 1.5), (currentPrice + 50))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 1.5), (currentPrice + 75))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 100))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 150))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2.5), (currentPrice + 200))
 
 
             console.log(`
@@ -220,20 +220,20 @@ const tick = async(config, binanceClient) => {
         if (recentDirection == 'up' && candleUpCounter > 2) {
             // place first order 
 
-            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2))
+            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 3))
 
             // place second order 
 
-            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 30))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 3), (currentPrice + 30))
 
             // place backup order 
 
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 25))
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 50))
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 75))
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 100))
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 150))
-            await binanceClient.createLimitBuyOrder(market, baseOrderAmount, (currentPrice - 200))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.25), (currentPrice - 25))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 50))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 75))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 100))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 150))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2.5), (currentPrice - 200))
 
             console.log(`
                 Market buy order placed at ${currentPrice}
