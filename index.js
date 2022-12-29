@@ -187,16 +187,19 @@ const tick = async(config, binanceClient) => {
 
     }
 
-    if (initialMargin == 0 && contracts == 0 && runtimeCounter > 1) {
+    if (initialMargin == 0 && contracts == 0) {
 
         runtimeCounter = 0; 
 
         // first is cancel all orders 
 
+
+
         await  binanceClient.cancelAllOrders(market)
 
+        if (runtimeCounter > 1) {
 
-        // then place new orders 
+               // then place new orders 
 
         if (recentDirection == 'down' && candleDownCounter > 2) {
             
@@ -265,6 +268,11 @@ const tick = async(config, binanceClient) => {
         if ((recentDirection == 'down' && candleDownCounter <= 2) || (recentDirection == 'up' && candleUpCounter <= 2)) {
             console.log("we go again");
         }
+            
+        }
+
+
+     
     }
 
 }
