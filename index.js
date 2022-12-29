@@ -123,9 +123,9 @@ const tick = async(config, binanceClient) => {
                 });
 
                 // place new order 
-                await binanceClient.createLimitBuyOrder(market, reUpdatedAmount, (entryPrice - 30))
+                await binanceClient.createLimitBuyOrder(market, reUpdatedAmount, (entryPrice - 20))
 
-                console.log(`placed new limit buy order at ${(entryPrice - 30)} `);
+                console.log(`placed new limit buy order at ${(entryPrice - 20)} `);
                 }
             if (side == 'long') {
                   // cancel current sell order 
@@ -137,9 +137,9 @@ const tick = async(config, binanceClient) => {
                 });
 
                 // place new order 
-                await binanceClient.createLimitSellOrder(market, reUpdatedAmount, (entryPrice + 30))
+                await binanceClient.createLimitSellOrder(market, reUpdatedAmount, (entryPrice + 20))
 
-                console.log(`placed new limit sell order at ${(entryPrice + 30)} `);
+                console.log(`placed new limit sell order at ${(entryPrice + 20)} `);
                 
             }
         }
@@ -152,17 +152,25 @@ const tick = async(config, binanceClient) => {
             // place new order 
 
             if (side == 'short') {
-                await binanceClient.createLimitBuyOrder(market, reUpdatedAmount, (entryPrice - 30))
+                await binanceClient.createLimitBuyOrder(market, reUpdatedAmount, (entryPrice - 20))
 
-                console.log(`placed new limit buy order at ${(entryPrice - 30)} `);
+                console.log(`placed new limit buy order at ${(entryPrice - 20)} `);
                 }
             if (side == 'long') {
-                await binanceClient.createLimitSellOrder(market, reUpdatedAmount, (entryPrice + 30))
-                console.log(`placed new limit sell order at ${(entryPrice + 30)} `);
+                await binanceClient.createLimitSellOrder(market, reUpdatedAmount, (entryPrice + 20))
+                console.log(`placed new limit sell order at ${(entryPrice + 20)} `);
             }
 
         }
 
+        if ( runtimeCounter > 72 && (collateral > (0.9 * initialMargin))) {
+            if (side == 'short') {
+                await binanceClient.createMarketOrder(market, "buy", contracts)
+                }
+            if (side == 'long') {
+                await binanceClient.createMarketOrder(market, "sell", contracts)
+            }
+        }
 
         if (collateral < (0.65 * initialMargin)) {
             if (side == 'short') {
@@ -174,7 +182,7 @@ const tick = async(config, binanceClient) => {
         }
 
         if (openOrders.length > 1) {
-            console.log("let's go again");
+            console.log("let's go again", runtimeCounter);
         }
 
     }
@@ -259,7 +267,6 @@ const tick = async(config, binanceClient) => {
         }
     }
 
-    console.log(runtimeCounter);
 }
 
 
