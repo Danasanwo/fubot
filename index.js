@@ -163,7 +163,7 @@ const tick = async(config, binanceClient) => {
 
         }
 
-        if ( runtimeCounter > 72 && (collateral > (0.93 * initialMargin))) {
+        if ( runtimeCounter > 180 && (collateral > (0.9 * initialMargin))) {
             if (side == 'short') {
                 await binanceClient.createMarketOrder(market, "buy", contracts)
                 }
