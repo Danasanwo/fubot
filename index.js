@@ -100,7 +100,7 @@ const tick = async(config, binanceClient) => {
 
     let totalBUSD = busdBalance['BUSD']['total']
 
-    let baseOrderAmount = ((0.03 * totalBUSD) * leverage)/ currentPrice
+    let baseOrderAmount = ((0.045 * totalBUSD) * leverage)/ currentPrice
     let reUpdatedAmount = (initialMargin * leverage)/ currentPrice
 
     // console.log(positions);
@@ -188,88 +188,103 @@ const tick = async(config, binanceClient) => {
 
     }
 
-    if (initialMargin == 0 && contracts == 0) {
-
+    if (initialMargin == 0 && contracts == 0 && openOrders.length < 8) { 
         // first is cancel all orders 
 
         await  binanceClient.cancelAllOrders(market)
 
-        if (runtimeCounter > 1) {
-
         runtimeCounter = 0; 
-               // then place new orders 
 
-            if (recentDirection == 'down' && candleDownCounter > 2) {
-                
-                // place first order 
+        // place dummy orders 
 
-                await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 2.5))
-
-                // place second order 
-
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2.5), (currentPrice - 40))
-
-                // place backup orders
-
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 25))
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 1.5), (currentPrice + 75))
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 1.5), (currentPrice + 150))
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 200))
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 250))
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2.5), (currentPrice + 300))
-
-
-                console.log(`
-                    Market sell order placed at ${currentPrice}
-                    Limit buy order  placed at ${currentPrice - 40}
-                    Limit sell order  placed at ${currentPrice + 20}
-                    Limit sell order placed at ${currentPrice + 75}
-                    Limit sell order placed at ${currentPrice + 150}
-                    Limit sell order placed at ${currentPrice + 200}
-                    Limit sell order placed at ${currentPrice + 250}
-                    Limit sell order placed at ${currentPrice + 300}
-                `);
-            
-
-            }
-        
-            if (recentDirection == 'up' && candleUpCounter > 2) {
-                // place first order 
-
-                await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2.5))
-
-                // place second order 
-
-                await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2.5), (currentPrice + 40))
-
-                // place backup order 
-
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 25))
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 75))
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 150))
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 200))
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 250))
-                await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2.5), (currentPrice - 300))
-
-                console.log(`
-                    Market buy order placed at ${currentPrice}
-                    Limit sell order  placed at ${currentPrice + 40}
-                    Limit buy order placed at ${currentPrice - 25}
-                    Limit buy order placed at ${currentPrice - 75}
-                    Limit buy order placed at ${currentPrice - 150}
-                    Limit buy order placed at ${currentPrice - 200}
-                    Limit buy order placed at ${currentPrice - 250}
-                    Limit buy order placed at ${currentPrice - 300}
-                `);        
-            }
-
-            if ((recentDirection == 'down' && candleDownCounter <= 2) || (recentDirection == 'up' && candleUpCounter <= 2)) {
-                console.log("we go again");
-            }
-            
-        }
-     
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2), (currentPrice + 2500))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 1.5), (currentPrice + 7500))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 1.5), (currentPrice + 15000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2), (currentPrice + 20000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2), (currentPrice + 25000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 30000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 40000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 50000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 60000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 70000))
+        await binanceClient.createLimitSellOrder(market, (baseOrderAmount / 2.5), (currentPrice + 80000))
     }
+
+    if (initialMargin == 0 && contracts == 0 && openOrders.length > 9 && runtimeCounter > 1) {
+
+        // Cancel all open orders 
+        await  binanceClient.cancelAllOrders(market)
+
+        // place real orders 
+
+        if (recentDirection == 'down' && candleDownCounter > 2) {
+                
+            // place first order 
+
+            await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 2))
+
+            // place second order 
+
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 30))
+
+            // place backup orders
+
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 40))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 100))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2.5), (currentPrice + 175))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 250))
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2.5), (currentPrice + 320))
+
+
+            console.log(`
+                Market sell order placed at ${currentPrice}
+                Limit buy order  placed at ${currentPrice - 30}
+                Limit sell order  placed at ${currentPrice + 40}
+                Limit sell order placed at ${currentPrice + 100}
+                Limit sell order placed at ${currentPrice + 175}
+                Limit sell order placed at ${currentPrice + 250}
+                Limit sell order placed at ${currentPrice + 320}
+            `);
+        
+
+        }
+    
+        if (recentDirection == 'up' && candleUpCounter > 2) {
+            // place first order 
+
+            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2))
+
+            // place second order 
+
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 30))
+
+            // place backup order 
+
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 40))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 100))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 175))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 250))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 320))
+
+
+            console.log(`
+                Market buy order placed at ${currentPrice}
+                Limit sell order  placed at ${currentPrice + 30}
+                Limit buy order placed at ${currentPrice - 40}
+                Limit buy order placed at ${currentPrice - 100}
+                Limit buy order placed at ${currentPrice - 175}
+                Limit buy order placed at ${currentPrice - 250}
+                Limit buy order placed at ${currentPrice - 320}
+            `);        
+        }
+
+        if ((recentDirection == 'down' && candleDownCounter <= 2) || (recentDirection == 'up' && candleUpCounter <= 2)) {
+            console.log("we go again");
+        }
+
+
+    }
+
     console.log(runtimeCounter);
 
 }
