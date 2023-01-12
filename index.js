@@ -218,7 +218,38 @@ const tick = async(config, binanceClient) => {
         // place real orders 
 
         if (recentDirection == 'down' && candleDownCounter > 2) {
-                
+                    
+            // place first order 
+
+            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2))
+
+            // place second order 
+
+            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 30))
+
+            // place backup order 
+
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 40))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 100))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 175))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 250))
+            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 320))
+
+
+            console.log(`
+                Market buy order placed at ${currentPrice}
+                Limit sell order  placed at ${currentPrice + 30}
+                Limit buy order placed at ${currentPrice - 40}
+                Limit buy order placed at ${currentPrice - 100}
+                Limit buy order placed at ${currentPrice - 175}
+                Limit buy order placed at ${currentPrice - 250}
+                Limit buy order placed at ${currentPrice - 320}
+            `);   
+        
+        }
+    
+        if (recentDirection == 'up' && candleUpCounter > 2) {
+        
             // place first order 
 
             await binanceClient.createMarketSellOrder(market, (baseOrderAmount * 2))
@@ -245,37 +276,6 @@ const tick = async(config, binanceClient) => {
                 Limit sell order placed at ${currentPrice + 250}
                 Limit sell order placed at ${currentPrice + 320}
             `);
-        
-
-        }
-    
-        if (recentDirection == 'up' && candleUpCounter > 2) {
-            // place first order 
-
-            await binanceClient.createMarketBuyOrder(market, (baseOrderAmount * 2))
-
-            // place second order 
-
-            await binanceClient.createLimitSellOrder(market, (baseOrderAmount * 2), (currentPrice + 30))
-
-            // place backup order 
-
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 40))
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 100))
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 1.5), (currentPrice - 175))
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 250))
-            await binanceClient.createLimitBuyOrder(market, (baseOrderAmount * 2), (currentPrice - 320))
-
-
-            console.log(`
-                Market buy order placed at ${currentPrice}
-                Limit sell order  placed at ${currentPrice + 30}
-                Limit buy order placed at ${currentPrice - 40}
-                Limit buy order placed at ${currentPrice - 100}
-                Limit buy order placed at ${currentPrice - 175}
-                Limit buy order placed at ${currentPrice - 250}
-                Limit buy order placed at ${currentPrice - 320}
-            `);        
         }
 
         if ((recentDirection == 'down' && candleDownCounter <= 2) || (recentDirection == 'up' && candleUpCounter <= 2)) {
