@@ -2,6 +2,7 @@ const ccxt = require('ccxt')
 require('dotenv').config()
 const { config } = require('dotenv')
 
+let time = new Date().getTime()
 
 const tick = async(config, binanceClient) => {
     const { market, spread, allocation, leverage} = config
@@ -58,10 +59,6 @@ const tick = async(config, binanceClient) => {
     const secDiffLoHi = Math.abs(secPreviousHigh - previousLow)
     const thirdDiffLoHi = Math.abs(thirdPreviousHigh - previousLow)
 
-
-    let time = new Date().getTime()
-
-    console.log(time);
 
     // trading algorithm 
 
